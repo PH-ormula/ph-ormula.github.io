@@ -16,6 +16,6 @@ The election for the club core members of 2026 just ended, here are the final re
 
 ## Latest Math Talk
 
-[Combinatorial Game Theory (2026-09-21)](/math-talks/combinatorial-game-theory/)
+[Analytic Number Theory: From Integers to Probability (2026-09-28)](/math-talks/analytic-number-theory/)
 
 ![](/images/qr-code-2026-first.png){: width="75%"}
