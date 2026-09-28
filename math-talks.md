@@ -28,3 +28,4 @@ permalink: /math-talks/
 ## Fall 2026
 
 - [Introductory Game Theory: Nim (2026-09-21)](/math-talks/combinatorial-game-theory/)
+- [Analytic Number Theory: From Integers to Probability (2026-09-28)](/math-talks/analytic-number-theory/)
