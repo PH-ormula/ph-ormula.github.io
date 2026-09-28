@@ -15,19 +15,19 @@ Summarized version. See full PDF [here](/math-talks/essence-of-integration/index
 - For a continuous function $y=f(x)$ on $[a, b]$, the integral represents the area of the **curvilinear trapezoid** enclosed by the curve, the x-axis, and the lines $x=a$ and $x=b$.
 - **Approximation:** Irregular shapes are approximated by simple regular shapes (rectangles).
 - **Infinite Subdivision:** Error is eliminated by breaking the area into an infinite number of infinitely small narrow rectangles.
-  - Width $\Delta x$ approaches $dx$ as $n \to \infty$.
+  - Width $\Delta x$ approaches $\mathrm{d}x$ as $n \to \infty$.
   - Height is taken as $f(x)$ at any point in the interval.
-  - Area of a single block: $dS = f(x) \cdot dx$.
+  - Area of a single block: $\mathrm{d}S = f(x) \cdot \mathrm{d}x$.
 
 ## Origin of the Integral Symbol
 
 - **Sigma ($\sum$):** Used for finite, discrete summation.
 - **Integral ($\int$):** A "stretched sigma" used for infinite summation of continuous quantities.
-- **Notation:** $S = \int_a^b f(x) dx$
+- **Notation:** $S = \int_a^b f(x) \mathrm{d}x$
   - $\int$: Integral symbol (infinite summation).
   - $a, b$: Limits of integration (range of summation).
   - $f(x)$: Integrand (height of rectangles).
-  - $dx$: Integration variable (infinitesimal base).
+  - $\mathrm{d}x$: Integration variable (infinitesimal base).
 
 ## Integrals vs. Geometric Areas
 
@@ -35,18 +35,18 @@ Summarized version. See full PDF [here](/math-talks/essence-of-integration/index
 - Integrals are **signed cumulative sums**.
 - Function values below the x-axis ($f(x) < 0$) result in negative area elements, which can "cancel out" positive values.
 - **Physical Example: $v-t$ (Velocity-Time) Graph**
-  - **Displacement:** The integral $\int_{t_1}^{t_2} v(t) dt$. Reflects the net change in position (can be zero).
+  - **Displacement:** The integral $\int_{t_1}^{t_2} v(t) \mathrm{d}t$. Reflects the net change in position (can be zero).
   - **Distance:** The total geometric area (sum of absolute values). Reflects the actual path length.
   - _Example:_ A soccer ball kicked vertically first rises ($v > 0$) then falls ($v < 0$). The integral over the whole trip is 0 (net displacement), while the total area is the actual path length (total distance).
 
 ## Underlying Essence of Derivatives
 
-- **Origin of $dy/dx$:** The limit of the incremental ratio $\frac{\Delta y}{\Delta x}$ as $\Delta x \to 0$.
+- **Origin of $\mathrm{d}y/\mathrm{d}x$:** The limit of the incremental ratio $\frac{\Delta y}{\Delta x}$ as $\Delta x \to 0$.
 - **Geometric Meaning:** The slope of the tangent line.
-- **Independence of Differentials:** $dy$ and $dx$ are independent infinitesimals.
-  - They can be separated and treated like numbers: $dy = f'(x) dx$.
-  - **Inversion:** $dx/dy$ represents the slope of the **normal** to the curve.
-  - Reciprocal relationship: $k_{tangent} \cdot k_{normal} = \frac{dy}{dx} \cdot \frac{dx}{dy} = 1$.
+- **Independence of Differentials:** $\mathrm{d}y$ and $\mathrm{d}x$ are independent infinitesimals.
+  - They can be separated and treated like numbers: $\mathrm{d}y = f'(x) \mathrm{d}x$.
+  - **Inversion:** $\mathrm{d}x/\mathrm{d}y$ represents the slope of the **normal** to the curve.
+  - Reciprocal relationship: $k_{tangent} \cdot k_{normal} = \frac{\mathrm{d}y}{\mathrm{d}x} \cdot \frac{\mathrm{d}x}{\mathrm{d}y} = 1$.
 
 ## Second Derivative and Concavity
 
@@ -54,9 +54,9 @@ Summarized version. See full PDF [here](/math-talks/essence-of-integration/index
 - **Geometric Interpretation:**
   - $f^{\prime\prime}(x) > 0$: Slope is increasing $\implies$ Curve is **concave upward**.
   - $f^{\prime\prime}(x) < 0$: Slope is decreasing $\implies$ Curve is **concave downward**.
-- **Notation Breakdown:** In the official notation $\frac{d^2y}{dx^2}$:
-  - **Molecule ($d^2y$):** Indicates $y$ is differentiated twice. The first $d$ is the derivative sign, and the second corresponds to the differential $dy$.
-  - **Denominator ($dx^2$):** Represents $(dx)^2$, meaning $x$ is differentiated twice with respect to the infinitesimal $dx$. It is NOT a squaring operation of $x$.
+- **Notation Breakdown:** In the official notation $\frac{\mathrm{d}^2y}{\mathrm{d}x^2}$:
+  - **Molecule ($\mathrm{d}^2y$):** Indicates $y$ is differentiated twice. The first $\mathrm{d}$ is the derivative sign, and the second corresponds to the differential $\mathrm{d}y$.
+  - **Denominator ($\mathrm{d}x^2$):** Represents $(\mathrm{d}x)^2$, meaning $x$ is differentiated twice with respect to the infinitesimal $\mathrm{d}x$. It is NOT a squaring operation of $x$.
 
 ## Application: Badminton Shuttlecock Trajectory
 
@@ -65,9 +65,9 @@ Summarized version. See full PDF [here](/math-talks/essence-of-integration/index
   - $x(t) = \frac{1}{2}ut$ (Horizontal, uniform velocity).
   - $y(t) = \frac{\sqrt{3}}{2}ut - 5t^2$ (Vertical, uniform acceleration with $g=10$).
 - **Parametric Differentiation:**
-  - $dx/dt = \frac{1}{2}u$
-  - $dy/dt = \frac{\sqrt{3}}{2}u - 10t$
-  - $\frac{dy}{dx} = \frac{dy/dt}{dx/dt} = \frac{\frac{\sqrt{3}}{2}u - 10t}{\frac{1}{2}u}$
+  - $\mathrm{d}x/\mathrm{d}t = \frac{1}{2}u$
+  - $\mathrm{d}y/\mathrm{d}t = \frac{\sqrt{3}}{2}u - 10t$
+  - $\frac{\mathrm{d}y}{\mathrm{d}x} = \frac{\mathrm{d}y/\mathrm{d}t}{\mathrm{d}x/\mathrm{d}t} = \frac{\frac{\sqrt{3}}{2}u - 10t}{\frac{1}{2}u}$
 - **Perpendicularity Condition:** The product of slopes at $t=5$ and $t=15$ is $-1$.
   - $k_5 = \frac{\frac{\sqrt{3}}{2}u - 50}{\frac{1}{2}u}$
   - $k_{15} = \frac{\frac{\sqrt{3}}{2}u - 150}{\frac{1}{2}u}$
@@ -81,11 +81,11 @@ Summarized version. See full PDF [here](/math-talks/essence-of-integration/index
 - **"Guessing" $\ln(1-x)$ via Integration:**
   - We know the geometric series: $1 + x + x^2 + x^3 + \dots = \frac{1}{1-x}$.
   - Since the derivative of $\ln(x)$ is $1/x$, the integral of $1/(1-x)$ should be related to $\ln(1-x)$.
-  - **Chain Rule Correction:** Integrating term-by-term on the left and using the chain rule on the right, we find $\int \frac{1}{1-x} dx = -\ln(1-x)$.
+  - **Chain Rule Correction:** Integrating term-by-term on the left and using the chain rule on the right, we find $\int \frac{1}{1-x} \mathrm{d}x = -\ln(1-x)$.
   - Thus, $-\ln(1-x) = x + \frac{x^2}{2} + \frac{x^3}{3} + \dots$
-- **Integrating Differentials:** "Hiding" functions after the differential $d$ (substitution).
-  - Example: $\int \sin^3 x \cdot \cos x dx = \int \sin^3 x d(\sin x)$.
-  - Substituting $\Delta = \sin x$: $\int \Delta^3 d\Delta = \frac{1}{4}\Delta^4 + C = \frac{1}{4}\sin^4 x + C$.
+- **Integrating Differentials:** "Hiding" functions after the differential $\mathrm{d}$ (substitution).
+  - Example: $\int \sin^3 x \cdot \cos x \mathrm{d}x = \int \sin^3 x \mathrm{d}(\sin x)$.
+  - Substituting $\Delta = \sin x$: $\int \Delta^3 \mathrm{d}\Delta = \frac{1}{4}\Delta^4 + C = \frac{1}{4}\sin^4 x + C$.
 
 ## Verification of L'Hôpital's Rule
 
