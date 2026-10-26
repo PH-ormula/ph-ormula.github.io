@@ -16,6 +16,6 @@ The election for the club core members of 2026 just ended, here are the final re
 
 ## Latest Math Talk
 
-[Analytic Number Theory: From Integers to Probability (2026-09-28)](/math-talks/analytic-number-theory/)
+[Introduction to Graph Theory — Ramsey Numbers (2026-10-26)](/math-talks/ramsey-numbers/)
 
 ![](/images/qr-code-2026-first.png){: width="75%"}
