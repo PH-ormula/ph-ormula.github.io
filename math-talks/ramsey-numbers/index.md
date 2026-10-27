@@ -22,6 +22,8 @@ The question thus becomes: **does every red–blue coloring of the edges of $$K_
 
 **Answer.** For $$n = 6$$ it always does, whereas $$K_5$$ admits a coloring with no monochromatic $$K_3$$. Hence $$R(3,3) = 6$$.
 
+**Try it yourself.** [Open the interactive edge-coloring game](/math-talks/ramsey-numbers/party-game.html): color the edges of $$K_5$$ or $$K_6$$ red or blue and try to avoid a monochromatic triangle.
+
 ## 2 Basic Definitions
 
 For a set $$V$$, we write $$\binom{V}{2}$$ for the set of all $$2$$-element subsets of $$V$$.

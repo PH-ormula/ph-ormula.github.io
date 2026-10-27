@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>The Party Problem · Edge Coloring</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;700&family=Noto+Serif:ital,wght@1,700&display=swap" rel="stylesheet">
+<style>
+  /* ---------- Dark blue theme ---------- */
+  :root {
+    color-scheme: dark;
+    --bg: #060b16;
+    --card: #0c1529;
+    --card-edge: rgba(160, 190, 255, 0.11);
+    --chip: rgba(160, 190, 255, 0.07);
+    --ink: #eaf0ff;
+    --muted: #93a4c8;
+    --faint: #33466e;
+    --red: #ff6b6b;
+    --red-soft: rgba(255, 107, 107, 0.2);
+    --blue: #5fa8ff;
+    --blue-soft: rgba(95, 168, 255, 0.2);
+    --ok: #5fd39a;
+    --ok-soft: rgba(95, 211, 154, 0.16);
+    --warn: #ffb35c;
+    --warn-soft: rgba(255, 179, 92, 0.14);
+    --shadow: 0 20px 44px -20px rgba(0, 5, 20, 0.8), 0 2px 6px -2px rgba(0, 5, 20, 0.5);
+    --serif: "Noto Serif", Georgia, "Times New Roman", serif;
+    --sans: "Noto Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { min-height: 100%; }
+  body {
+    background-color: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    -webkit-tap-highlight-color: transparent;
+    display: flex;
+    justify-content: center;
+    padding: max(22px, env(safe-area-inset-top)) 16px max(28px, env(safe-area-inset-bottom));
+  }
+  .wrap {
+    width: 100%;
+    max-width: 540px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  /* ---------- Header ---------- */
+  header { text-align: center; padding-top: 4px; }
+  .kicker {
+    font-size: 0.72rem;
+    letter-spacing: 0.26em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+  h1 {
+    font-family: var(--sans);
+    font-weight: 700;
+    font-size: clamp(1.35rem, 5vw, 1.7rem);
+    letter-spacing: 0.04em;
+    margin: 8px 0 8px;
+    line-height: 1.2;
+  }
+  h1 .sep { color: var(--muted); margin: 0 0.25em; font-weight: 400; }
+  .lede {
+    color: var(--muted);
+    font-size: 0.93rem;
+    line-height: 1.75;
+    max-width: 30em;
+    margin: 0 auto;
+  }
+  .lede b { color: var(--ink); font-weight: 600; }
+  .lede b.r { color: var(--red); }
+  .lede b.bl { color: var(--blue); }
+
+  .sw {
+    display: inline-block;
+    width: 10px; height: 10px;
+    border-radius: 3px;
+    vertical-align: 0;
+    margin-right: 5px;
+  }
+  .sw.red { background: var(--red); }
+  .sw.blue { background: var(--blue); }
+  .sw.none { border: 1.5px dashed var(--faint); }
+
+  /* ---------- Toolbar ---------- */
+  .toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .seg {
+    display: inline-flex;
+    background: var(--chip);
+    border-radius: 12px;
+    padding: 3px;
+  }
+  .seg button {
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    padding: 6px 16px;
+    border-radius: 9px;
+    cursor: pointer;
+    font-family: inherit;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 6px;
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  }
+  .seg .k { font-family: var(--serif); font-weight: 700; font-size: 1.05rem; font-style: italic; }
+  .seg .k sub { font-size: 0.7em; font-style: normal; }
+  .seg .n { font-size: 0.78rem; }
+  .seg button.active {
+    background: var(--card);
+    color: var(--ink);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 0 0 1px var(--card-edge);
+  }
+  .actions { display: inline-flex; gap: 8px; }
+  .btn {
+    border: 1px solid var(--card-edge);
+    background: var(--card);
+    color: var(--ink);
+    padding: 8px 14px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    border-radius: 11px;
+    cursor: pointer;
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: transform 0.12s, opacity 0.2s, background 0.2s;
+  }
+  .btn svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .btn:disabled { opacity: 0.38; cursor: default; }
+  .btn:active:not(:disabled) { transform: scale(0.96); }
+  @media (hover: hover) {
+    .btn:hover:not(:disabled) { background: var(--chip); }
+    .seg button:not(.active):hover { color: var(--ink); }
+  }
+
+  /* ---------- Board card ---------- */
+  .board {
+    background: var(--card);
+    border: 1px solid var(--card-edge);
+    border-radius: 22px;
+    box-shadow: var(--shadow);
+    padding: 16px 16px 18px;
+    transition: box-shadow 0.4s;
+  }
+  .board.win {
+    box-shadow: var(--shadow), 0 0 0 3px var(--ok-soft);
+  }
+  .board-top { display: flex; justify-content: center; }
+  .status {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-size: 0.92rem;
+    font-weight: 500;
+    line-height: 1.4;
+    text-align: center;
+    transition: background 0.25s, color 0.25s;
+  }
+  .status .dot {
+    flex: none;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+  .status.neutral { background: var(--chip); color: var(--muted); }
+  .status.bad { background: var(--warn-soft); color: var(--warn); }
+  .status.bad .dot { animation: blink 1.2s ease-in-out infinite; }
+  .status.ok { background: var(--ok-soft); color: var(--ok); }
+  @keyframes blink { 50% { opacity: 0.25; } }
+
+  .stage {
+    width: 100%;
+    aspect-ratio: 1;
+    margin: 6px 0 10px;
+  }
+  svg.graph {
+    width: 100%;
+    height: 100%;
+    display: block;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    overflow: visible;
+  }
+
+  .edge-hit {
+    stroke: transparent;
+    stroke-width: 24;
+    fill: none;
+    cursor: pointer;
+    pointer-events: stroke;
+  }
+  .edge-vis {
+    fill: none;
+    stroke-linecap: round;
+    pointer-events: none;
+    transition: stroke 0.2s ease, stroke-width 0.2s ease;
+  }
+  .edge-vis.uncolored { stroke: var(--faint); stroke-width: 3; stroke-dasharray: 0.01 8; }
+  .edge-vis.red { stroke: var(--red); stroke-width: 5; }
+  .edge-vis.blue { stroke: var(--blue); stroke-width: 5; }
+  .edge-vis.pop { animation: pop 0.38s cubic-bezier(0.3, 1.6, 0.5, 1); }
+  .edge-vis.hl { stroke-width: 8; animation: throb 1.3s ease-in-out infinite; }
+  @keyframes pop { 0% { stroke-width: 11; } 100% { stroke-width: 5; } }
+  @keyframes throb { 50% { opacity: 0.5; } }
+  @media (hover: hover) {
+    .edge:hover .edge-vis.uncolored { stroke: var(--muted); }
+    .edge:hover .edge-vis.red, .edge:hover .edge-vis.blue { stroke-width: 7; }
+  }
+
+  .tri { stroke: none; animation: fade 0.35s ease both; }
+  .tri.red { fill: var(--red-soft); }
+  .tri.blue { fill: var(--blue-soft); }
+  .tri:not(.first) { opacity: 0.5; }
+  @keyframes fade { from { opacity: 0; } }
+
+  .v-halo { fill: var(--card); }
+  .v-dot {
+    fill: var(--card);
+    stroke: var(--ink);
+    stroke-width: 2;
+    transition: stroke 0.2s, stroke-width 0.2s, fill 0.2s;
+  }
+  .vertex.in-red .v-dot { stroke: var(--red); stroke-width: 3; fill: var(--red-soft); }
+  .vertex.in-blue .v-dot { stroke: var(--blue); stroke-width: 3; fill: var(--blue-soft); }
+  .v-label {
+    fill: var(--ink);
+    font-family: var(--sans);
+    font-size: 15px;
+    font-weight: 700;
+    text-anchor: middle;
+    dominant-baseline: central;
+    pointer-events: none;
+  }
+
+  /* ---------- Progress ---------- */
+  .bar {
+    display: flex;
+    height: 6px;
+    border-radius: 999px;
+    background: var(--chip);
+    overflow: hidden;
+  }
+  .bar span { height: 100%; width: 0; transition: width 0.3s ease; }
+  .bar .bar-red { background: var(--red); }
+  .bar .bar-blue { background: var(--blue); }
+  .counts {
+    display: flex;
+    justify-content: center;
+    gap: 22px;
+    margin-top: 11px;
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+  .counts b {
+    color: var(--ink);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    margin-left: 3px;
+  }
+
+  .hint {
+    text-align: center;
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+  .hint .arrow { margin: 0 0.35em; opacity: 0.6; }
+  footer {
+    text-align: center;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    color: var(--faint);
+    margin-top: 2px;
+  }
+
+  @media (max-width: 420px) {
+    .toolbar { justify-content: center; }
+    .board { padding: 12px 10px 16px; border-radius: 18px; }
+    .counts { gap: 16px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="kicker">Pinghe Math Club · Complete Graph</div>
+    <h1>The Party Problem<span class="sep">·</span>Edge Coloring</h1>
+    <p class="lede">
+      Color every edge <span class="sw red"></span><b class="r">red</b> or <span class="sw blue"></span><b class="bl">blue</b> and avoid a <b>monochromatic triangle</b><br>
+      (three vertices joined by edges of one color)
+    </p>
+  </header>
+
+  <div class="toolbar">
+    <div class="seg" role="group" aria-label="Graph size">
+      <button type="button" id="btnK5"><span class="k">K<sub>5</sub></span><span class="n">5 people</span></button>
+      <button type="button" id="btnK6" class="active"><span class="k">K<sub>6</sub></span><span class="n">6 people</span></button>
+    </div>
+    <div class="actions">
+      <button type="button" class="btn" id="btnUndo" disabled>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>
+        Undo
+      </button>
+      <button type="button" class="btn" id="btnReset">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
+        Reset
+      </button>
+    </div>
+  </div>
+
+  <section class="board" id="board">
+    <div class="board-top">
+      <div class="status neutral" id="status" aria-live="polite">
+        <span class="dot"></span><span id="statusText">Click an edge to start coloring</span>
+      </div>
+    </div>
+
+    <div class="stage">
+      <svg class="graph" id="graph" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" aria-label="Edge coloring of a complete graph">
+        <g id="tris"></g>
+        <g id="edges"></g>
+        <g id="verts"></g>
+      </svg>
+    </div>
+
+    <div class="bar" aria-hidden="true">
+      <span class="bar-red" id="barRed"></span><span class="bar-blue" id="barBlue"></span>
+    </div>
+    <div class="counts">
+      <span><i class="sw red"></i>Red<b id="cRed">0</b></span>
+      <span><i class="sw blue"></i>Blue<b id="cBlue">0</b></span>
+      <span><i class="sw none"></i>Uncolored<b id="cNone">0</b></span>
+    </div>
+  </section>
+
+  <p class="hint">Click an edge to cycle: none<span class="arrow">→</span>red<span class="arrow">→</span>blue<span class="arrow">→</span>none</p>
+
+  <footer>Pinghe Math Club — Complete Graph</footer>
+</div>
+
+<script>
+(function () {
+  const NS = 'http://www.w3.org/2000/svg';
+  const RED = 'red', BLUE = 'blue', NONE = 'uncolored';
+  const CYCLE = [NONE, RED, BLUE];
+  const $ = (id) => document.getElementById(id);
+
+  const trisG = $('tris'), edgesG = $('edges'), vertsG = $('verts');
+  const boardEl = $('board'), statusEl = $('status'), statusText = $('statusText');
+  const btnK5 = $('btnK5'), btnK6 = $('btnK6'), btnUndo = $('btnUndo'), btnReset = $('btnReset');
+  const barRed = $('barRed'), barBlue = $('barBlue');
+  const cRed = $('cRed'), cBlue = $('cBlue'), cNone = $('cNone');
+
+  let n = 6;
+  /** @type {Map<string,string>} */ let colors = new Map();
+  /** @type {{key:string, from:string, to:string}[]} */ let history = [];
+  let pts = [];
+  const edgeEls = new Map();   // key -> visible line
+  const triEls = new Map();    // "a-b-c" -> polygon
+  let vertEls = [];
+
+  function el(tag, attrs) {
+    const e = document.createElementNS(NS, tag);
+    for (const k in attrs) e.setAttribute(k, attrs[k]);
+    return e;
+  }
+  const edgeKey = (a, b) => (a < b ? a + '-' + b : b + '-' + a);
+
+  function allEdges(nn) {
+    const list = [];
+    for (let i = 0; i < nn; i++)
+      for (let j = i + 1; j < nn; j++) list.push([i, j]);
+    return list;
+  }
+  function positions(nn) {
+    const cx = 200, cy = 200, r = 150, out = [];
+    for (let i = 0; i < nn; i++) {
+      const ang = -Math.PI / 2 + (2 * Math.PI * i) / nn;
+      out.push({ x: cx + r * Math.cos(ang), y: cy + r * Math.sin(ang) });
+    }
+    return out;
+  }
+  function triangles(nn) {
+    const t = [];
+    for (let a = 0; a < nn; a++)
+      for (let b = a + 1; b < nn; b++)
+        for (let c = b + 1; c < nn; c++) t.push([a, b, c]);
+    return t;
+  }
+
+  function findMonoTriangles() {
+    const red = [], blue = [];
+    for (const [a, b, c] of triangles(n)) {
+      const e1 = colors.get(edgeKey(a, b)) || NONE;
+      const e2 = colors.get(edgeKey(b, c)) || NONE;
+      const e3 = colors.get(edgeKey(a, c)) || NONE;
+      const t = { verts: [a, b, c], edges: [edgeKey(a, b), edgeKey(b, c), edgeKey(a, c)] };
+      if (e1 === RED && e2 === RED && e3 === RED) red.push(t);
+      if (e1 === BLUE && e2 === BLUE && e3 === BLUE) blue.push(t);
+    }
+    return { red, blue };
+  }
+
+  /* Rebuild the DOM only when switching size or resetting; afterwards only toggle classes, so color changes animate */
+  function build() {
+    trisG.replaceChildren();
+    edgesG.replaceChildren();
+    vertsG.replaceChildren();
+    edgeEls.clear();
+    triEls.clear();
+    vertEls = [];
+    pts = positions(n);
+
+    for (const [a, b] of allEdges(n)) {
+      const key = edgeKey(a, b);
+      const c = { x1: pts[a].x, y1: pts[a].y, x2: pts[b].x, y2: pts[b].y };
+      const g = el('g', { class: 'edge' });
+      const vis = el('line', { ...c, class: 'edge-vis ' + NONE });
+      const hit = el('line', { ...c, class: 'edge-hit' });
+      hit.dataset.key = key;
+      hit.addEventListener('pointerdown', onEdgeTap);
+      g.append(vis, hit);
+      edgesG.append(g);
+      edgeEls.set(key, vis);
+    }
+
+    for (let i = 0; i < n; i++) {
+      const g = el('g', { class: 'vertex' });
+      g.append(
+        el('circle', { cx: pts[i].x, cy: pts[i].y, r: 22, class: 'v-halo' }),
+        el('circle', { cx: pts[i].x, cy: pts[i].y, r: 17, class: 'v-dot' })
+      );
+      const t = el('text', { x: pts[i].x, y: pts[i].y, class: 'v-label' });
+      t.textContent = String(i + 1);
+      g.append(t);
+      vertsG.append(g);
+      vertEls.push(g);
+    }
+  }
+
+  function rebuild() {
+    colors = new Map();
+    history = [];
+    for (const [a, b] of allEdges(n)) colors.set(edgeKey(a, b), NONE);
+    build();
+    update();
+  }
+
+  function setStatus(kind, text) {
+    statusEl.className = 'status ' + kind;
+    statusText.textContent = text;
+  }
+
+  function update() {
+    const { red, blue } = findMonoTriangles();
+    const mono = [
+      ...red.map((t) => ({ ...t, c: RED })),
+      ...blue.map((t) => ({ ...t, c: BLUE })),
+    ];
+    const first = mono[0] || null;
+    const hl = new Set(first ? first.edges : []);
+
+    let r = 0, b = 0, u = 0;
+    for (const v of colors.values()) {
+      if (v === RED) r++;
+      else if (v === BLUE) b++;
+      else u++;
+    }
+    const total = colors.size;
+
+    // Edges
+    for (const [key, vis] of edgeEls) {
+      vis.classList.remove(RED, BLUE, NONE);
+      vis.classList.add(colors.get(key) || NONE);
+      vis.classList.toggle('hl', hl.has(key));
+    }
+
+    // Monochromatic triangle fills (reuse existing polygons so they do not flicker on every click)
+    const seen = new Set();
+    for (const t of mono) {
+      const tk = t.verts.join('-');
+      seen.add(tk);
+      let p = triEls.get(tk);
+      if (!p) {
+        p = el('polygon', { points: t.verts.map((i) => pts[i].x + ',' + pts[i].y).join(' ') });
+        trisG.append(p);
+        triEls.set(tk, p);
+      }
+      p.setAttribute('class', 'tri ' + t.c + (t === first ? ' first' : ''));
+    }
+    for (const [tk, p] of triEls) {
+      if (!seen.has(tk)) { p.remove(); triEls.delete(tk); }
+    }
+
+    // Vertices
+    vertEls.forEach((g, i) => {
+      g.classList.remove('in-red', 'in-blue');
+      if (first && first.verts.includes(i)) g.classList.add('in-' + first.c);
+    });
+
+    // Status
+    if (mono.length) {
+      const parts = [];
+      if (red.length) parts.push('red ×' + red.length);
+      if (blue.length) parts.push('blue ×' + blue.length);
+      setStatus('bad', 'Monochromatic triangle: ' + parts.join(', '));
+    } else if (u === 0) {
+      setStatus('ok', 'Done: no monochromatic triangle!');
+    } else if (u === total) {
+      setStatus('neutral', 'Click an edge to start coloring');
+    } else {
+      setStatus('neutral', 'Keep going, avoid one-color triangles');
+    }
+    boardEl.classList.toggle('win', !mono.length && u === 0);
+
+    // Progress
+    barRed.style.width = (r / total) * 100 + '%';
+    barBlue.style.width = (b / total) * 100 + '%';
+    cRed.textContent = r;
+    cBlue.textContent = b;
+    cNone.textContent = u;
+    btnUndo.disabled = history.length === 0;
+  }
+
+  function pop(key) {
+    const v = edgeEls.get(key);
+    if (!v) return;
+    v.classList.remove('pop');
+    void v.getBoundingClientRect();
+    v.classList.add('pop');
+  }
+
+  function onEdgeTap(ev) {
+    ev.preventDefault();
+    const key = ev.currentTarget.dataset.key;
+    const from = colors.get(key) || NONE;
+    const to = CYCLE[(CYCLE.indexOf(from) + 1) % CYCLE.length];
+    colors.set(key, to);
+    history.push({ key, from, to });
+    update();
+    if (to !== NONE) pop(key);
+  }
+
+  function undo() {
+    if (!history.length) return;
+    const last = history.pop();
+    colors.set(last.key, last.from);
+    update();
+  }
+
+  function setN(nn) {
+    n = nn;
+    btnK6.classList.toggle('active', n === 6);
+    btnK5.classList.toggle('active', n === 5);
+    rebuild();
+  }
+
+  btnK6.addEventListener('click', () => setN(6));
+  btnK5.addEventListener('click', () => setN(5));
+  btnUndo.addEventListener('click', undo);
+  btnReset.addEventListener('click', rebuild);
+
+  rebuild();
+})();
+</script>
+</body>
+</html>
