@@ -16,6 +16,6 @@ The election for the club core members of 2026 just ended, here are the final re
 
 ## Latest Math Talk
 
-[Introduction to Graph Theory — Ramsey Numbers (2026-10-26)](/math-talks/ramsey-numbers/)
+[Lights Out 关灯游戏：模二运算与线性代数 (2026-11-02)](/math-talks/lights-out-linear-algebra/)
 
 ![](/images/qr-code-2026-first.png){: width="75%"}

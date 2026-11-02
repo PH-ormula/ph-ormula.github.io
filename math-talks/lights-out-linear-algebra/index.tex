@@ -1,0 +1,171 @@
+\documentclass[UTF8,fontset=fandol,11pt,a4paper]{ctexart}
+\usepackage[margin=2.4cm]{geometry}
+\setlength{\emergencystretch}{2em}
+\usepackage{amsmath,amssymb,amsthm,booktabs,hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
+\newtheorem{definition}{定义}[section]
+\newtheorem{theorem}[definition]{定理}
+\newtheorem{proposition}[definition]{命题}
+\newtheorem{example}[definition]{例}
+\newcommand{\F}{\mathbb F_2}
+\newcommand{\rank}{\operatorname{rank}}
+\newcommand{\im}{\operatorname{im}}
+\title{关灯游戏：模二运算与线性代数}
+\author{数学社活动笔记}
+\date{}
+\begin{document}
+\maketitle
+\begin{abstract}
+关灯游戏把一个操作问题转化为有限域上的线性方程组。我们从二乘二棋盘出发，介绍矩阵乘法与高斯消元，再利用秩、零空间和可逆性回答三个问题：哪些局面可解，每个局面有多少个解，以及不同解之间有什么关系。最后讨论固定位置交换与矩阵乘法的顺序。
+\end{abstract}
+\section{从游戏到奇偶性}
+棋盘上每盏灯有亮、灭两种状态。按下一个按钮，会翻转一组灯。目标是使所有灯熄灭。经典十字规则翻转按钮所在位置及上下左右的邻居，边界不环绕。
+本文假定每个按钮影响的灯集固定，而且每次操作都是翻转。在这些假设下：
+\begin{enumerate}
+\item 同一个按钮按两次等于没有按；
+\item 操作顺序不影响最终结果。
+\end{enumerate}
+因此只需记录每个按钮按动次数的奇偶性。每种按法用一个零一向量表示，而不区分顺序或重复两次的冗余操作。
+\begin{definition}
+二元域 $\F=\{0,1\}$ 中，加法、乘法都取整数运算结果除以二的余数。特别地，$1+1=0$，且 $-a=a$。
+\end{definition}
+除最后的置换讨论外，本文矩阵与向量运算均在 $\F$ 上进行。矩阵的秩也必须在这个数域中计算，不能直接套用实数上的计算结果。
+\section{矩阵与线性模型}
+设有 $m$ 盏灯、$n$ 个按钮。用 $b\in\F^m$ 表示初始灯态，亮记为一；用 $x\in\F^n$ 表示按法，按记为一。
+定义规则矩阵 $A\in\F^{m\times n}$：
+\[
+ A_{ij}=\begin{cases}1,&\text{按钮 $j$ 会翻转灯 $i$},\\0,&\text{否则}.\end{cases}
+\]
+\textbf{行对应灯，列对应按钮。}第 $j$ 列记录按钮 $j$ 的完整影响范围，第 $i$ 行记录所有能影响灯 $i$ 的按钮。
+\subsection{矩阵乘法的两种理解}
+矩阵乘向量的定义是
+\[
+(Ax)_i=\sum_{j=1}^n A_{ij}x_j.
+\]
+这是灯 $i$ 被翻转次数的奇偶性。若把 $A$ 的列写成 $a_1,\ldots,a_n$，同一计算也可写成
+\[
+ Ax=x_1a_1+\cdots+x_na_n.
+\]
+即把选中的按钮对应的翻转图案相加。最终灯态为 $b+Ax$，故
+\[
+ \boxed{\text{全部熄灭}\iff b+Ax=0\iff Ax=b.}
+\]
+\subsection{线性}
+映射 $T(x)=Ax$ 满足
+\[
+ T(x+y)=T(x)+T(y),\qquad T(cx)=cT(x)\quad(c\in\F).
+\]
+这样的映射称为线性映射。第一条性质表示：先合并按法再算效果，等于先分别算效果再合并。这里合并是模二相加，共同出现的按钮抵消。
+\section{完整例子：二乘二十字棋盘}
+把位置按行编号为 $\begin{smallmatrix}1&2\\3&4\end{smallmatrix}$。只让第一盏灯亮，则
+\[
+ A=\begin{pmatrix}1&1&1&0\\1&1&0&1\\1&0&1&1\\0&1&1&1\end{pmatrix},\qquad
+ b=\begin{pmatrix}1\\0\\0\\0\end{pmatrix}.
+\]
+把系数与右侧灯态一起写成增广矩阵 $[A\mid b]$。记 $R_i$ 为第 $i$ 行：
+\begin{align*}
+\left[\begin{array}{cccc|c}1&1&1&0&1\\1&1&0&1&0\\1&0&1&1&0\\0&1&1&1&0\end{array}\right]
+&\xrightarrow{R_2\gets R_2+R_1,\ R_3\gets R_3+R_1}
+\left[\begin{array}{cccc|c}1&1&1&0&1\\0&0&1&1&1\\0&1&0&1&1\\0&1&1&1&0\end{array}\right]\\
+&\xrightarrow{R_2\leftrightarrow R_3}
+\left[\begin{array}{cccc|c}1&1&1&0&1\\0&1&0&1&1\\0&0&1&1&1\\0&1&1&1&0\end{array}\right]\\
+&\xrightarrow{R_4\gets R_4+R_2}
+\left[\begin{array}{cccc|c}1&1&1&0&1\\0&1&0&1&1\\0&0&1&1&1\\0&0&1&0&1\end{array}\right]\\
+&\xrightarrow{R_4\gets R_4+R_3}
+\left[\begin{array}{cccc|c}1&1&1&0&1\\0&1&0&1&1\\0&0&1&1&1\\0&0&0&1&0\end{array}\right].
+\end{align*}
+从最后一行向上回代：$x_4=0$，$x_3=1$，$x_2=1$，$x_1=1$。所以按一、二、三，不按四。第一盏灯翻转三次，其他灯各翻转两次，恰好全部熄灭。
+\subsection{为什么行操作合法}
+交换两行只改变条件的排列。把一行加到另一行，同时保留原行，再加一次就恢复原矩阵，因此操作可逆，解集不变。右侧的灯态列必须一起操作。
+消元是在改写条件，并不是在棋盘上按按钮。矩阵系数中的一表示某个变量参与条件，不直接表示该按钮必须按。
+\section{主元、秩与可解性}
+\begin{definition}
+阶梯形矩阵的非零行排列在零行之前，各非零行第一个非零元素的位置逐行右移。这些首个非零元素称为主元。矩阵的秩是其阶梯形中主元的个数。
+\end{definition}
+等价地，秩是矩阵中最多能选出的线性无关行的数量。线性无关指这些行的零组合只有所有系数均为零这一种。行操作不改变行空间，所以不改变秩。应当在消元后数非零行；原矩阵的非零行可能重复或能由其他行组合得到。
+\begin{theorem}
+方程组 $Ax=b$ 有解，当且仅当
+\[\rank(A)=\rank([A\mid b]).\]
+\end{theorem}
+\begin{proof}
+消元若出现 $[0\ \cdots\ 0\mid1]$，就要求 $0=1$，方程组无解，同时增广矩阵比系数矩阵多一个主元。若没有这种行，自由变量可任意指定，再回代得到主元变量，因而有解，两矩阵的秩相同。
+\end{proof}
+\section{零空间与全部解}
+\begin{definition}
+矩阵的零空间为 $\ker A=\{z\in\F^n:Az=0\}$。它由全部零效果按法组成。
+\end{definition}
+零空间包含零向量，并且对加法、数乘封闭。一组向量若线性无关且能组合出空间中所有向量，就称为一组基；基中的向量数量称为空间的维数。
+\begin{theorem}
+若 $x_0$ 是 $Ax=b$ 的一个解，则全部解组成集合
+\[x_0+\ker A=\{x_0+z:z\in\ker A\}.\]
+\end{theorem}
+\begin{proof}
+若 $Az=0$，则 $A(x_0+z)=b$。反过来，若 $Ax=b$，则 $A(x+x_0)=b+b=0$，故 $x=x_0+(x+x_0)$ 属于上述集合。
+\end{proof}
+\begin{theorem}[秩与零度定理]
+对 $A\in\F^{m\times n}$，有
+\[\boxed{\rank(A)+\dim\ker A=n.}\]
+\end{theorem}
+\begin{proof}
+设秩为 $r$。消元产生 $r$ 个主元变量和 $n-r$ 个自由变量。对齐次方程 $Az=0$，依次把一个自由变量设为一、其余自由变量设为零，回代得到 $n-r$ 个向量。它们线性无关，因为各自自由坐标不同；它们也生成全部齐次解，因为任意自由坐标都可由这些选择组合出来。因此零空间维数为 $n-r$。
+\end{proof}
+每个自由变量有两种取值，故当 $Ax=b$ 有解时，解的数量为
+\[\boxed{2^{n-r}.}\]
+这不表示这些解按键数相同。寻找最少步数，还需在解集中最小化 $x$ 中一的个数。
+\section{列空间与可解局面数}
+\begin{definition}
+列空间 $\im A=\{Ax:x\in\F^n\}$ 是矩阵各列的所有线性组合，也就是所有可产生的翻转结果。
+\end{definition}
+\begin{proposition}
+行秩与列秩相等，因而 $\dim\im A=\rank(A)$。
+\end{proposition}
+\begin{proof}
+行操作相当于对每一列施加同一个可逆线性映射，保持列之间的线性关系。对阶梯形矩阵，其主元列线性无关；若有 $r$ 个非零行，主元列在前 $r$ 个坐标上构成可逆三角矩阵，因此能够生成其余各列。故列空间维数也为 $r$。
+\end{proof}
+因为 $Ax=b$ 可解恰好意味着 $b\in\im A$，所以可解局面共有 $2^r$ 个。若全部 $2^m$ 种初始灯态等概率出现，可解概率为 $2^{r-m}$。这里的概率不适用于从全灭状态随机按键生成的题目，后者必定可解。
+\subsection{一个贯穿的自定义例子}
+令按钮一、二都影响灯一、二，按钮三、四分别只影响自己。则
+\[
+ B=\begin{pmatrix}1&1&0&0\\1&1&0&0\\0&0&1&0\\0&0&0&1\end{pmatrix}
+ \sim\begin{pmatrix}1&1&0&0\\0&0&1&0\\0&0&0&1\\0&0&0&0\end{pmatrix}.
+\]
+于是 $\rank(B)=3$，且
+\[\ker B=\{(0,0,0,0)^{\mathsf T},(1,1,0,0)^{\mathsf T}\}.\]
+方程 $Bx=b$ 可解当且仅当 $b_1=b_2$，共有八种可解局面，每种有两个解。前两盏灯状态不同则无解：每次操作同时翻转它们，无法改变它们是否相同。
+\section{可逆矩阵与二乘二棋盘的特殊性质}
+单位矩阵 $I_n$ 的对角线为一，其余位置为零，满足 $I_nx=x$。
+\begin{definition}
+方阵 $A$ 可逆，是指存在矩阵 $A^{-1}$ 满足 $AA^{-1}=A^{-1}A=I_n$。
+\end{definition}
+对 $n$ 阶方阵，下列条件等价：满秩；零空间只有零向量；每个 $b$ 都有唯一解；矩阵可逆。它们分别表示没有自由变量、没有非零零效果按法，以及能从输出唯一恢复输入。
+最初二乘二十字矩阵满足
+\[
+\begin{pmatrix}1&1&1&0\\1&1&0&1\\1&0&1&1\\0&1&1&1\end{pmatrix}^{\!2}=I_4.
+\]
+计算时，对角线元素来自三个一相加，非对角线元素来自两个一相加。因此 $A^{-1}=A$，任意灯态的唯一解为 $x=Ab$。这给出了区别于消元的直接解法。
+这里 $A^2b$ 表示第一次输出作为第二次输入，不能理解为在棋盘上把同一份名单按两遍。这个平方等于单位矩阵的结论也不能直接推广到更大的十字棋盘。
+\section{拓展：置换矩阵与操作顺序}
+固定的位置交换也可以由矩阵表示。令
+\[
+ P=\begin{pmatrix}0&1&0\\1&0&0\\0&0&1\end{pmatrix},\qquad
+ Q=\begin{pmatrix}1&0&0\\0&0&1\\0&1&0\end{pmatrix}.
+\]
+$P$ 交换前两个坐标，$Q$ 交换后两个坐标。这类每行、每列恰好有一个一的矩阵称为置换矩阵。此处也可在实数域上理解这些运算。
+对 $v=(a,b,c)^{\mathsf T}$，有
+\[QPv=(b,c,a)^{\mathsf T},\qquad PQv=(c,a,b)^{\mathsf T}.\]
+所以一般 $PQ\ne QP$。矩阵乘积表示复合，右边的变换先执行。交换满足 $P^2=I$，但三位置循环移动的矩阵 $C$ 满足 $C^3=I$，其逆为 $C^2$，不等于自身。
+这与关灯操作顺序无关并不矛盾：固定翻转是灯态空间上的平移 $s\mapsto s+a_j$，这些平移彼此交换；并不是所有线性变换都交换。若机关的操作能力还会随当前颜色变化，就必须重新分析，不能直接套用固定的 $Ax=b$ 模型。
+\section{练习}
+\begin{enumerate}
+\item 对矩阵 $B$，求初始状态 $(1,1,1,0)^{\mathsf T}$ 的全部解及最少按键数。
+\item 设 $w\in\F^m$ 满足 $w^{\mathsf T}A=0$，其中 $w^{\mathsf T}$ 表示将列向量转置为行向量。证明 $w^{\mathsf T}b$ 在任何按键操作下保持不变，并说明为何 $w^{\mathsf T}b=1$ 可以证明无解。
+\end{enumerate}
+\subsection*{答案与提示}
+\begin{enumerate}
+\item 全部解为 $(1,0,1,0)^{\mathsf T}$ 与 $(0,1,1,0)^{\mathsf T}$，最少按两次。
+\item 操作后的值是 $w^{\mathsf T}(b+Ax)=w^{\mathsf T}b$，而全灭状态的值为零。因此，若初始值为一，就不可能全部熄灭。这里 $w$ 选择了一组灯，使每个按钮都翻转其中偶数盏灯，所以这组灯的亮灯数奇偶性不变。注意不变量由左零空间给出，零效果按法由右零空间给出，两者一般不同。
+\end{enumerate}
+\paragraph{阅读参考}
+结构参考数学社讲义\href{https://ph-ormula.github.io/math-talks/ramsey-numbers/}{Introduction to Graph Theory --- Ramsey Numbers}：从具体问题出发，建立定义，给出例子与证明，再安排拓展与练习。
+\end{document}
+

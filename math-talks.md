@@ -30,3 +30,4 @@ permalink: /math-talks/
 - [Introductory Game Theory: Nim (2026-09-21)](/math-talks/combinatorial-game-theory/)
 - [Analytic Number Theory: From Integers to Probability (2026-09-28)](/math-talks/analytic-number-theory/)
 - [Introduction to Graph Theory — Ramsey Numbers (2026-10-26)](/math-talks/ramsey-numbers/)
+- [Lights Out 关灯游戏：模二运算与线性代数 (2026-11-02)](/math-talks/lights-out-linear-algebra/)
