@@ -5,8 +5,6 @@ permalink: /math-talks/lights-out-linear-algebra/
 toc: true
 ---
 
-See the full PDF [here](/math-talks/lights-out-linear-algebra/index.pdf).
-
 # 关灯游戏：模二运算与线性代数
 
 *数学社活动笔记*
@@ -222,7 +220,3 @@ $$
 
 1. 全部解为 $$(1,0,1,0)^{\mathsf T}$$ 与 $$(0,1,1,0)^{\mathsf T}$$，最少按两次。
 2. 操作后的值是 $$w^{\mathsf T}(b + Ax) = w^{\mathsf T} b$$，而全灭状态的值为零。因此，若初始值为一，就不可能全部熄灭。这里 $$w$$ 选择了一组灯，使每个按钮都翻转其中偶数盏灯，所以这组灯的亮灯数奇偶性不变。注意不变量由左零空间给出，零效果按法由右零空间给出，两者一般不同。
-
-#### 阅读参考
-
-结构参考数学社讲义 [Introduction to Graph Theory — Ramsey Numbers](/math-talks/ramsey-numbers/)：从具体问题出发，建立定义，给出例子与证明，再安排拓展与练习。
