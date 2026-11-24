@@ -40,6 +40,11 @@ permalink: /resources-index/
 - [Numberphile](https://www.youtube.com/@numberphile)
 - [ArtOfProblemSolving YouTube](https://www.youtube.com/@ArtofProblemSolving)
 
+## math communities
+
+- [Mathematics Stack exchange](https://math.stackexchange.com)
+- [MathOverflow](https://mathoverflow.net)
+
 ## Math-Related Subjects
 
 - [Stanford Introduction to Logic](http://intrologic.stanford.edu/public/lessons.php)
