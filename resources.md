@@ -40,10 +40,10 @@ permalink: /resources-index/
 - [Numberphile](https://www.youtube.com/@numberphile)
 - [ArtOfProblemSolving YouTube](https://www.youtube.com/@ArtofProblemSolving)
 
-## math communities
+## online math communities
 
-- [Mathematics Stack exchange](https://math.stackexchange.com)
-- [MathOverflow](https://mathoverflow.net)
+- [Mathematics Stack exchange](/math_stack_exchange/README.md) [website](https://math.stackexchange.com)
+- [MathOverflow](/mathoverflow/readme.md) [website](https://mathoverflow.net)
 
 ## Math-Related Subjects
 
